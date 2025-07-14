@@ -1,13 +1,16 @@
 import jwt from "jsonwebtoken";
+import "dotenv/config";
+import { ErrorResponse } from "../utils/errorResponse.js";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export default (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    return res
-      .status(401)
-      .json({ message: "Authorization Header missing or malformed" });
+    new ErrorResponse(401, {
+      code: "",
+      message: "Authorization Header missing or malformed",
+    });
   }
 
   const token = authHeader.split(" ")[1];
@@ -16,5 +19,7 @@ export default (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
-  } catch (error) {}
+  } catch (error) {
+    new ErrorResponse(401, { code: "", message: "Invalid or Expired Token" });
+  }
 };
