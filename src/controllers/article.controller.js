@@ -5,7 +5,7 @@ import { validateFields } from "../utils/validateRequiredFields.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Article } from "../models/article.model.js";
 
-const addArticle = asyncHandler(async (req, res) => {
+const createArticle = asyncHandler(async (req, res) => {
   const { title, description, topic, tags } = req.body;
   console.log(`🔴 inside add article`);
   const requiredFields = { title, description, topic };
@@ -178,9 +178,51 @@ const getRecentArticles = asyncHandler(async (req, res) => {
   }
 });
 
-const getMostAskedArticles = asyncHandler(async (req, res) => {
+// const getMostAskedArticles = asyncHandler(async (req, res) => {
+//   console.log(`🔴 inside getMostAskedArticles`);
+//   try {
+//     const articles = await Article.find({}).sort({ view_count: -1 }).limit(10);
+
+//     if (!articles) {
+//       res.status(404).json(
+//         new ErrorResponse(404, {
+//           code: "",
+//           message: "Articles not found",
+//         })
+//       );
+//       return;
+//     }
+
+//     res
+//       .status(200)
+//       .json(
+//         new ApiResponse(200, "Top articles fetched successfully", articles)
+//       );
+//   } catch (error) {
+//     res.status(500).json(
+//       new ErrorResponse(500, {
+//         code: "",
+//         message: `Something went wrong while fetching top articles ${error.message}`,
+//       })
+//     );
+//     return;
+//   }
+// });
+
+async function getMostAskedArticles(req, res) {
+  console.log(`🔴 inside getMostAskedArticles`);
   try {
-    const articles = await Article.find().sort({ view_count: -1 }).limit(10);
+    const articles = await Article.find({}).sort({ view_count: -1 }).limit(10);
+
+    if (!articles) {
+      res.status(404).json(
+        new ErrorResponse(404, {
+          code: "",
+          message: "Articles not found",
+        })
+      );
+      return;
+    }
 
     res
       .status(200)
@@ -191,12 +233,12 @@ const getMostAskedArticles = asyncHandler(async (req, res) => {
     res.status(500).json(
       new ErrorResponse(500, {
         code: "",
-        message: "Something went wrong while fetching top articles",
+        message: `Something went wrong while fetching top articles ${error.message}`,
       })
     );
     return;
   }
-});
+}
 
 const getArticleById = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -287,7 +329,7 @@ export {
   getMostAskedArticles,
   getRecentArticles,
   getArticlesByTopic,
-  addArticle,
+  createArticle,
   deleteArticle,
   updateArticle,
 };

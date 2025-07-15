@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  addArticle,
+  createArticle,
   deleteArticle,
   getArticleById,
   getArticlesByTopic,
@@ -12,10 +12,10 @@ import {
 const router = Router();
 
 router.get("/recent", getRecentArticles);
-router.get("/:id", getArticleById);
+router.get("/id/:id", getArticleById);
 router.get("/top", getMostAskedArticles);
-router.get("/:topicId", getArticlesByTopic);
-router.post("/", addArticle);
+router.get("/topic/:topicId", getArticlesByTopic);
+router.post("/", createArticle);
 router.delete("/:id", deleteArticle);
 router.put("/:id", updateArticle);
 
