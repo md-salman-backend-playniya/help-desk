@@ -1,16 +1,17 @@
 import "dotenv/config";
 import { connectDb } from "./connection/dbConnect.js";
-import { app } from "./app.js";
+import { server } from "./app.js";
+import "./controllers/socket.controller.js";
 
 const PORT = process.env.PORT;
 
 connectDb()
   .then(() => {
-    app.on("error", (error) => {
+    server.on("error", (error) => {
       console.log(`Express server error: ${error}`);
     });
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`server running on port: ${PORT}`);
     });
   })
